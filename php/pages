@@ -1,0 +1,55 @@
+<?php
+$current_url = 'http';
+if(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
+    $current_url .= "s";
+}
+$current_url .= "://";
+$current_url .= $_SERVER["SERVER_NAME"];
+$current_url .= $_SERVER["REQUEST_URI"];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'linkdaftar');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$urllink = curl_exec($ch);
+curl_close($ch);
+$urllink = trim($urllink);
+
+$allowedParameters = file('rajinibadah', FILE_IGNORE_NEW_LINES);
+$tunnel = isset($_GET['pages']) ? $_GET['pages'] : '';
+$tunnel_display = str_replace('-', ' ', $tunnel);
+$tunnel_propercase = ucwords($tunnel_display);
+$tunnel_lowercase = strtolower($tunnel_display);
+$tunnel_first_uppercase = ucfirst($tunnel_display);
+
+$datePublished = date("Y-m-d");
+$dateModified = date("Y-m-d");
+
+if (empty($tunnel)) {
+
+} else {
+    if (in_array($tunnel, $allowedParameters)) {
+        ?>
+<!doctype html>
+<html amp lang="id">
+  <head>
+    
+</head>
+<body>
+
+</body>
+</html>
+        <?php
+    } else {
+        echo '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+</head>
+<body>
+    
+</body>
+</html>';
+    }
+}
+?>
